@@ -6,7 +6,7 @@ typedef union
 {
         int number;
         struct node *tk;
-} YYSTYPE;
+} YYSTYPE2;
 
 /* constants corresponding to tokens */
 #define ANDnum                  1

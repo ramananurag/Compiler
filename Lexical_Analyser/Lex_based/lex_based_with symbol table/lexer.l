@@ -14,11 +14,11 @@ int len = 0;
 
 void reportError(char *str);
 
-/* YYSTYPE(union) is either a pointer to a 
+/* YYSTYPE2(union) is either a pointer to a 
  * token or a number 
  */
 
-YYSTYPE yylval;
+YYSTYPE2 yylval2;
 
 %}
 
@@ -43,25 +43,25 @@ badint ({digit})+(({letter})|(\\)|(\'))+({digit})*
 ">"                     {  yycolumn += yyleng; return GTnum; }
 {ident}                 { 
                                 /* check to see if name is already in symbol table */
-                                yylval.tk = search(yytext);
+                                yylval2.tk = search(yytext);
 
                                 /* if it is not in the symbol table, search(yytext), 
                                 will return a NULL pointer(i.e. 0 ),
                                 we then know it is an identifier */
 
-                                if(yylval.tk == 0) {
-                                        yylval.tk = insertID(yytext);
-                                        yylval.tk->len = strlen(yytext);
+                                if(yylval2.tk == 0) {
+                                        yylval2.tk = insertID(yytext);
+                                        yylval2.tk->len = strlen(yytext);
                                         yycolumn += yyleng;  //
                                         return IDnum;
                                 }
                                 /* otherwise, it is already in the symbol table and it  
                                    could be an identifier or a keyword, so 
-                                   just return it's type. yylval.tk will point to the 
+                                   just return it's type. yylval2.tk will point to the 
                                    symbol table entry where the name is located   */
                                 else {
                                         yycolumn += yyleng;
-                                        return yylval.tk->type;
+                                        return yylval2.tk->type;
                                 }
                         }
 {badident}              {
@@ -79,7 +79,7 @@ badint ({digit})+(({letter})|(\\)|(\'))+({digit})*
 "=="                    {  yycolumn += yyleng; return EQnum; }
 ">="                    {  yycolumn += yyleng; return GEnum; }
 {intconst}              { 
-                                yylval.number = atoi(yytext);
+                                yylval2.number = atoi(yytext);
                                 yycolumn += yyleng;
                                 return ICONSTnum; 
                         }
@@ -170,12 +170,12 @@ badint ({digit})+(({letter})|(\\)|(\'))+({digit})*
 
                                  lit_buffer[j] = '\0';
 
-                                 yylval.tk = search(lit_buffer);
+                                 yylval2.tk = search(lit_buffer);
 
                                  /* if it is not, then load it into the symbol table */
-                                 if(yylval.tk == 0) {
-                                        yylval.tk = insertString(lit_buffer); 
-                                        yylval.tk->len = strlen(yytext);
+                                 if(yylval2.tk == 0) {
+                                        yylval2.tk = insertString(lit_buffer); 
+                                        yylval2.tk->len = strlen(yytext);
                                  }
 
                                 /* otherwise, it is already in the symbol table*/ 
